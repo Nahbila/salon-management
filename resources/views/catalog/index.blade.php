@@ -71,5 +71,9 @@
             });
         });
     });
+        const initial = new URLSearchParams(location.search).get('filter');
+    if (initial) {
+        document.querySelector(`.filter-btn[data-filter="${initial}"]`)?.click();
+    }
 </script>
 @endpush

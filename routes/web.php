@@ -8,8 +8,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\ClientSpaceController;
+use App\Http\Controllers\LandingController;
 
-Route::redirect('/', '/services');
+Route::get('/', [LandingController::class, 'index'])->name('home');
 
 // Public pages
 Route::get('/services', [CatalogController::class, 'index'])->name('catalog.index');
