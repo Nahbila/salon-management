@@ -16,6 +16,9 @@
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
+    @if (session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
     <table class="table table-striped align-middle">
         <thead>
@@ -36,7 +39,18 @@
                 <tr>
                     <td>{{ $appointment->client->name }}</td>
                     <td>{{ $appointment->client->phone }}</td>
-                    <td>{{ $appointment->service->name }} ({{ $appointment->service->price }} dt)</td>
+                    <td>
+                        @if ($appointment->service)
+                            {{ $appointment->service->name }} ({{ (float) $appointment->service->price }} dt)
+                        @else
+                            Custom request
+                            @if ($appointment->quoted_price)
+                                ({{ (float) $appointment->quoted_price }} dt)
+                            @else
+                                <span class="text-muted">(no price yet)</span>
+                            @endif
+                        @endif
+                    </td>
                     <td>
                         @if ($appointment->custom_request_note || $appointment->custom_request_image)
                         @if ($appointment->custom_request_note)
@@ -91,7 +105,16 @@
                                 <button type="submit" class="btn btn-sm btn-success">Mark Paid</button>
                             </form>
                         @endif
+                        @if ($appointment->status === 'cancelled' && ! ($appointment->payment && $appointment->payment->status === 'paid'))
+                            <form method="POST" action="{{ route('admin.appointments.destroy', $appointment->id) }}" class="mt-2"
+                                onsubmit="return confirm('Delete this appointment permanently?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        @endif
                     </td>
+
                 </tr>
             @empty
                 <tr><td colspan="8">No appointments yet.</td></tr>

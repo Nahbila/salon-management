@@ -22,6 +22,7 @@ Route::get('/my-appointments/list', [ClientSpaceController::class, 'index'])->na
 Route::post('/my-appointments/{appointment}/cancel', [ClientSpaceController::class, 'cancel'])->name('client.cancel');
 Route::post('/my-appointments/{appointment}/reschedule', [ClientSpaceController::class, 'reschedule'])->name('client.reschedule');
 Route::post('/my-appointments/exit', [ClientSpaceController::class, 'exit'])->name('client.exit');
+Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('admin.appointments.destroy');
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'fr'])) {
         session(['locale' => $locale]);
